@@ -1,0 +1,42 @@
+call plug#begin()
+  "Plug 'preservim/nerdtree'
+  Plug 'vim-airline/vim-airline'
+  Plug 'kyazdani42/nvim-web-devicons' " for file icons
+  Plug 'kyazdani42/nvim-tree.lua'
+call plug#end()
+
+" Spaces & Tabs {{{
+set tabstop=4       " number of visual spaces per TAB
+set softtabstop=4   " number of spaces in tab when editing
+set shiftwidth=4    " number of spaces to use for autoindent
+set expandtab       " tabs are space
+set autoindent
+set copyindent      " copy indent from the previous line
+" }}} Spaces & Tabs
+
+" Clipboard {{{
+set clipboard+=unnamedplus
+" }}} Clipboard
+
+" UI Config {{{
+set hidden
+set number                   " show line number
+set showcmd                  " show command in bottom bar
+"set cursorline               " highlight current line
+"set wildmenu                 " visual autocomplete for command menu
+set showmatch                " highlight matching brace
+set laststatus=2             " window will always have a status line
+set nobackup
+set noswapfile
+" }}} UI Config
+
+" autostart nerdtree
+"autocmd VimEnter * NERDTree
+
+nnoremap <C-n> :NvimTreeToggle<CR>
+nnoremap <leader>r :NvimTreeRefresh<CR>
+nnoremap <leader>n :NvimTreeFindFile<CR>
+"nnoremap <leader>n :NERDTreeFocus<CR>
+"nnoremap <C-n> :NERDTree<CR>
+"nnoremap <C-t> :NERDTreeToggle<CR>
+"nnoremap <C-f> :NERDTreeFind<CR>

@@ -1,0 +1,17 @@
+HEAD
+config
+configstore
+description
+enchant
+hexchat
+hooks
+info
+menus
+objects
+refs
+thefuck
+wireshark
+yarn
+.config/index
+.config/index.lock
+nvim/plugged
