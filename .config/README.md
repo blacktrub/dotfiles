@@ -13,3 +13,4 @@ config push
 config pull
 ```
 
+Original source - https://www.atlassian.com/git/tutorials/dotfiles
