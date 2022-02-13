@@ -31,3 +31,7 @@ nvim/plugged
 __pycache__
 index
 index.lock
+vimb/command
+vimb/cookies.db
+vimb/history
+vimb/search
