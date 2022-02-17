@@ -26,6 +26,11 @@ vim.call('plug#begin', '~/.config/nvim/plugged')
   -- themes
   Plug 'marko-cerovac/material.nvim'
   Plug 'bluz71/vim-nightfly-guicolors'
+
+  -- todo highlight
+  Plug 'nvim-lua/plenary.nvim'
+  Plug 'folke/todo-comments.nvim'
+ 
 vim.call('plug#end')
 
 require('lualine').setup({options = {theme = 'nightfly'}})
@@ -371,3 +376,7 @@ vim.g.bufferline = {
 
 vim.diagnostic.config({virtual_text = false})
 require('nvim_comment').setup()
+
+
+require("todo-comments").setup {}
+
