@@ -9,6 +9,7 @@ vim.call('plug#begin', '~/.config/nvim/plugged')
   Plug 'akinsho/toggleterm.nvim'
   Plug 'nvim-lua/plenary.nvim'
   Plug 'nvim-telescope/telescope.nvim'
+  Plug 'nvim-telescope/telescope-ui-select.nvim'
   Plug 'nvim-treesitter/nvim-treesitter'
   Plug 'neovim/nvim-lspconfig'
   Plug 'williamboman/nvim-lsp-installer'
@@ -30,10 +31,14 @@ vim.call('plug#begin', '~/.config/nvim/plugged')
   -- todo highlight
   Plug 'nvim-lua/plenary.nvim'
   Plug 'folke/todo-comments.nvim'
+
+  -- session
+  Plug 'Shatur/neovim-session-manager'
+
  
 vim.call('plug#end')
 
-require('lualine').setup({options = {theme = 'nightfly'}})
+-- require('lualine').setup({options = {theme = 'material'}})
 require('nvim-web-devicons').get_icons()
 
 vim.opt.termguicolors = true
@@ -177,8 +182,17 @@ require('telescope').setup{
         file_previewer   = require('telescope.previewers').vim_buffer_cat.new,
         grep_previewer   = require('telescope.previewers').vim_buffer_vimgrep.new,
         qflist_previewer = require('telescope.previewers').vim_buffer_qflist.new,
-    }
+    },
+    extensions = {
+        ["ui-select"] = {
+            require("telescope.themes").get_dropdown {
+                -- even more opts
+            }
+        }
+    },
 }
+require("telescope").load_extension("ui-select")
+
 require('nvim-treesitter.configs').setup {
     highlight = {
         enable = true,
@@ -275,6 +289,14 @@ nvim_lsp.dockerls.setup{
 }
 
 nvim_lsp.clangd.setup{
+  on_attach = lsp_attach,
+  flags = {
+      debounce_text_changes = 150,
+  },
+  capabilities = capabilities,
+}
+
+nvim_lsp.tsserver.setup{
   on_attach = lsp_attach,
   flags = {
       debounce_text_changes = 150,
@@ -379,4 +401,9 @@ require('nvim_comment').setup()
 
 
 require("todo-comments").setup {}
-
+require('session_manager').setup {
+  autoload_mode = require('session_manager.config').AutoloadMode.Disabled, -- Define what to do when Neovim is started without arguments. Possible values: Disabled, CurrentDir, LastSession
+}
+map('n', '<C-s>s', '<cmd>SessionManager save_current_session<cr>', opts)
+map('n', '<C-s>l', '<cmd>SessionManager load_session<cr>', opts)
+map('n', '<C-s>d', '<cmd>SessionManager delete_session<cr>', opts)

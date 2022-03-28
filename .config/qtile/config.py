@@ -39,6 +39,7 @@ from libqtile.log_utils import logger
 logger.setLevel(logging.ERROR)
 # logger.warning("Your message here")
 
+stream_mode = False
 
 class TextBasedIntervalWidget(base.InLoopPollText):
     defaults = [
@@ -68,6 +69,7 @@ class PamixerVolume(TextBasedIntervalWidget):
 mod = "mod4"
 # terminal = guess_terminal()
 terminal = "alacritty"
+tmim = f"{terminal} -e tmux new -As vim"
 
 keys = [
     # A list of available commands that can be bound to keys can be found
@@ -137,6 +139,7 @@ keys = [
     ),
     # Run terminal
     Key([mod], "t", lazy.spawn(terminal), desc="Launch terminal"),
+    Key([mod], "a", lazy.spawn(tmim), desc="Launch vim"),
     # Switch keyboard layout
     Key([mod], "space", lazy.spawn("xkb-switch -n"), desc="Switch keyboard layout"),
     # Sound hotkeys
@@ -213,42 +216,142 @@ widget_defaults = dict(
 )
 extension_defaults = widget_defaults.copy()
 
-screens = [
-    Screen(
-        wallpaper="~/pic/mosaic.jpg",
-        top=bar.Bar(
-            [
-                widget.CurrentLayout(),
-                # widget.Image(filename="~/pic/arch-logo.png"),
-                widget.GroupBox(),
-                widget.TextBox(text="|", fontsize=12, foreground=["#f8f8f2", "#f8f8f2"]),
-                widget.WindowName(),
-                widget.Chord(
-                    chords_colors={
-                        "launch": ("#ff0000", "#ffffff"),
-                    },
-                    name_transform=lambda name: name.upper(),
-                ),
-                # widget.TextBox("default config", name="default"),
-                # widget.TextBox("Press &lt;M-r&gt; to spawn", foreground="#d75f5f"),
-                widget.Systray(),
-                # widget.Sep(linewidth=0, padding=6),
-                widget.TextBox(text="|", fontsize=12, foreground=["#f8f8f2", "#f8f8f2"]),
-                CurrentKeyboardLayout(),
-                widget.TextBox(text="|", fontsize=12, foreground=["#f8f8f2", "#f8f8f2"]),
-                PamixerVolume(),
-                widget.TextBox(text="|", fontsize=12, foreground=["#f8f8f2", "#f8f8f2"]),
-                widget.Clock(format="%Y-%m-%d %a %I:%M %p"),
-                widget.TextBox(text="|", fontsize=12, foreground=["#f8f8f2", "#f8f8f2"]),
-                # widget.QuickExit(),
-            ],
-            24,
-            # 0,
-            # border_width=[2, 0, 2, 0],  # Draw top and bottom borders
-            # border_color=["ff00ff", "000000", "ff00ff", "000000"]  # Borders are magenta
+if not stream_mode:
+    screens = [
+        Screen(
+            wallpaper="~/pic/pattern4k.jpg",
+            top=bar.Bar(
+                [
+                    widget.CurrentLayout(),
+                    # widget.Image(filename="~/pic/arch-logo.png"),
+                    widget.GroupBox(),
+                    widget.TextBox(
+                        text="|", fontsize=12, foreground=["#f8f8f2", "#f8f8f2"]
+                    ),
+                    widget.WindowName(),
+                    widget.Chord(
+                        chords_colors={
+                            "launch": ("#ff0000", "#ffffff"),
+                        },
+                        name_transform=lambda name: name.upper(),
+                    ),
+                    # widget.TextBox("default config", name="default"),
+                    # widget.TextBox("Press &lt;M-r&gt; to spawn", foreground="#d75f5f"),
+                    widget.Systray(),
+                    # widget.Sep(linewidth=0, padding=6),
+                    widget.TextBox(
+                        text="|", fontsize=12, foreground=["#f8f8f2", "#f8f8f2"]
+                    ),
+                    CurrentKeyboardLayout(),
+                    widget.TextBox(
+                        text="|", fontsize=12, foreground=["#f8f8f2", "#f8f8f2"]
+                    ),
+                    PamixerVolume(),
+                    widget.TextBox(
+                        text="|", fontsize=12, foreground=["#f8f8f2", "#f8f8f2"]
+                    ),
+                    widget.Clock(format="%Y-%m-%d %a %I:%M %p"),
+                    widget.TextBox(
+                        text="|", fontsize=12, foreground=["#f8f8f2", "#f8f8f2"]
+                    ),
+                    # widget.QuickExit(),
+                ],
+                24,
+                # 0,
+                # border_width=[2, 0, 2, 0],  # Draw top and bottom borders
+                # border_color=["ff00ff", "000000", "ff00ff", "000000"]  # Borders are magenta
+            ),
         ),
-    ),
-]
+    ]
+else:
+    fake_screens = [
+        Screen(
+            wallpaper="~/pic/mosaic.jpg",
+            top=bar.Bar(
+                [
+                    widget.CurrentLayout(),
+                    # widget.Image(filename="~/pic/arch-logo.png"),
+                    widget.GroupBox(),
+                    widget.TextBox(
+                        text="|", fontsize=12, foreground=["#f8f8f2", "#f8f8f2"]
+                    ),
+                    widget.WindowName(),
+                    widget.Chord(
+                        chords_colors={
+                            "launch": ("#ff0000", "#ffffff"),
+                        },
+                        name_transform=lambda name: name.upper(),
+                    ),
+                    # widget.TextBox("default config", name="default"),
+                    # widget.TextBox("Press &lt;M-r&gt; to spawn", foreground="#d75f5f"),
+                    widget.Systray(),
+                    # widget.Sep(linewidth=0, padding=6),
+                    widget.TextBox(
+                        text="|", fontsize=12, foreground=["#f8f8f2", "#f8f8f2"]
+                    ),
+                    CurrentKeyboardLayout(),
+                    widget.TextBox(
+                        text="|", fontsize=12, foreground=["#f8f8f2", "#f8f8f2"]
+                    ),
+                    PamixerVolume(),
+                    widget.TextBox(
+                        text="|", fontsize=12, foreground=["#f8f8f2", "#f8f8f2"]
+                    ),
+                    widget.Clock(format="%Y-%m-%d %a %I:%M %p"),
+                    widget.TextBox(
+                        text="|", fontsize=12, foreground=["#f8f8f2", "#f8f8f2"]
+                    ),
+                    # widget.QuickExit(),
+                ],
+                24,
+                # 0,
+                # border_width=[2, 0, 2, 0],  # Draw top and bottom borders
+                # border_color=["ff00ff", "000000", "ff00ff", "000000"]  # Borders are magenta
+            ),
+            width=1920,
+            height=1080,
+            x=960,
+            y=540,
+        ),
+        Screen(
+            bottom=bar.Bar(
+                [
+                    widget.Prompt(),
+                    widget.Sep(),
+                    widget.WindowName(),
+                    widget.Sep(),
+                    widget.Systray(),
+                    widget.Sep(),
+                    widget.Clock(format="%H:%M:%S %d.%m.%Y"),
+                ],
+                24,
+                background="#555555",
+            ),
+            x=0,
+            y=0,
+            width=960,
+            height=2160,
+        ),
+        Screen(
+            bottom=bar.Bar(
+                [
+                    widget.Prompt(),
+                    widget.Sep(),
+                    widget.WindowName(),
+                    widget.Sep(),
+                    widget.Systray(),
+                    widget.Sep(),
+                    widget.Clock(format="%H:%M:%S %d.%m.%Y"),
+                ],
+                24,
+                background="#555555",
+            ),
+            x=960 + 1920,
+            y=0,
+            width=960,
+            height=2160,
+        ),
+    ]
 
 # Drag floating layouts.
 mouse = [
