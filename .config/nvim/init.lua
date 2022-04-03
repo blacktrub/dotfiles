@@ -38,7 +38,7 @@ vim.call('plug#begin', '~/.config/nvim/plugged')
  
 vim.call('plug#end')
 
--- require('lualine').setup({options = {theme = 'material'}})
+require('lualine').setup({options = {theme = 'material'}})
 require('nvim-web-devicons').get_icons()
 
 vim.opt.termguicolors = true
@@ -119,7 +119,7 @@ require'nvim-tree'.setup {
   hijack_netrw        = true,
   open_on_setup       = false,
   ignore_ft_on_setup  = {},
-  auto_close          = true,
+  -- auto_close          = true,
   open_on_tab         = true,
   hijack_cursor       = false,
   update_cwd          = false,
