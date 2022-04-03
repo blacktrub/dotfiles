@@ -27,6 +27,7 @@ vim.call('plug#begin', '~/.config/nvim/plugged')
   -- themes
   Plug 'marko-cerovac/material.nvim'
   Plug 'bluz71/vim-nightfly-guicolors'
+  Plug 'projekt0n/github-nvim-theme'
 
   -- todo highlight
   Plug 'nvim-lua/plenary.nvim'
@@ -35,17 +36,23 @@ vim.call('plug#begin', '~/.config/nvim/plugged')
   -- session
   Plug 'Shatur/neovim-session-manager'
 
- 
 vim.call('plug#end')
 
-require('lualine').setup({options = {theme = 'material'}})
+-- THEME OPTIONS
+-- vim.cmd 'colorscheme material'
+-- vim.cmd [[colorscheme nightfly]]
+-- require('lualine').setup({options = {theme = 'material'}})
+require('github-theme').setup({
+    theme_style = "dimmed", --  dark/dimmed/dark_default/dark_colorblind/light/light_default/light_colorblind
+    colors = {bg = "#0d1117"},
+})
+
+require('lualine').setup()
 require('nvim-web-devicons').get_icons()
 
 vim.opt.termguicolors = true
-
--- vim.cmd 'colorscheme material'
-vim.cmd [[colorscheme nightfly]]
 vim.cmd 'set signcolumn=yes'
+
 
 
 -- Spaces & Tabs {{{
