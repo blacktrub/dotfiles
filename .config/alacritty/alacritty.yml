@@ -180,9 +180,47 @@ font:
 
 # If `true`, bold text is drawn using the bright color variants.
 #draw_bold_text_with_bright_colors: false
-
+draw_bold_text_with_bright_colors: true
 # Colors (Tomorrow Night)
+# Colors
 colors:
+  # Default colors
+  primary:
+    background:        '#080808'
+    foreground:        '#b2b2b2'
+    bright_foreground: '#eeeeee'
+
+  # Cursor colors
+  cursor:
+    text:   '#080808'
+    cursor: "#ff6037"
+
+  # Selection colors
+  selection:
+    text:       '#080808'
+    background: '#b2ceee'
+
+  # Normal colors
+  normal:
+    black:   '#323437'
+    red:     '#ff5454'
+    green:   '#8cc85f'
+    yellow:  '#e3c78a'
+    blue:    '#80a0ff'
+    magenta: '#d183e8'
+    cyan:    '#79dac8'
+    white:   '#c6c6c6'
+
+  # Bright colors
+  bright:
+    black:   '#949494'
+    red:     '#ff5189'
+    green:   '#36c692'
+    yellow:  '#c2c292'
+    blue:    '#74b2ff'
+    magenta: '#ae81ff'
+    cyan:    '#85dc85'
+    white:   '#e4e4e4'
   # Default colors
   #primary:
   #  background: '#1d1f21'
@@ -203,10 +241,10 @@ colors:
   #
   # Allowed values are CellForeground/CellBackground, which reference the
   # affected cell, or hexadecimal colors like #ff00ff.
-  cursor:
-    # text: CellBackground
-    # cursor: CellForeground
-    cursor: "#ff6037"
+  # cursor:
+  #   # text: CellBackground
+  #   # cursor: CellForeground
+  #   cursor: "#ff6037"
 
   # Vi mode cursor colors
   #
