@@ -24,14 +24,21 @@ vim.call('plug#begin', '~/.config/nvim/plugged')
   Plug 'sbdchd/neoformat' -- Format code
   Plug "terrortylor/nvim-comment"
 
+  -- fuzzy finder for lsp, it seems pretty but I don't know how to use it properly
+  -- Plug 'ojroques/nvim-lspfuzzy'
+  -- Plug 'junegunn/fzf'
+  -- Plug 'junegunn/fzf.vim'
+
   -- themes
   Plug 'marko-cerovac/material.nvim'
   Plug 'bluz71/vim-nightfly-guicolors'
   Plug 'projekt0n/github-nvim-theme'
+  Plug 'bluz71/vim-moonfly-colors'
 
   -- todo highlight
   Plug 'nvim-lua/plenary.nvim'
   Plug 'folke/todo-comments.nvim'
+
 
   -- session
   Plug 'Shatur/neovim-session-manager'
@@ -42,17 +49,17 @@ vim.call('plug#end')
 -- vim.cmd 'colorscheme material'
 -- vim.cmd [[colorscheme nightfly]]
 -- require('lualine').setup({options = {theme = 'material'}})
-require('github-theme').setup({
-    theme_style = "dimmed", --  dark/dimmed/dark_default/dark_colorblind/light/light_default/light_colorblind
-    colors = {bg = "#0d1117"},
-})
+-- require('github-theme').setup({
+--     theme_style = "dimmed", --  dark/dimmed/dark_default/dark_colorblind/light/light_default/light_colorblind
+--     colors = {bg = "#0d1117"},
+-- })
 
-require('lualine').setup()
+vim.cmd [[colorscheme moonfly]]
+require('lualine').setup({options = {theme = 'moonfly'}})
 require('nvim-web-devicons').get_icons()
 
 vim.opt.termguicolors = true
 vim.cmd 'set signcolumn=yes'
-
 
 
 -- Spaces & Tabs {{{
@@ -81,7 +88,8 @@ vim.opt.showmatch = true                -- highlight matching brace
 vim.opt.laststatus = 2             -- window will always have a status line
 
 -- vim.opt.nobackup = true
---vim.opt.noswapfile = true
+-- vim.opt.swapfile = false
+vim.o.swapfile=false
 -- }}} UI Config
 
 local map = vim.api.nvim_set_keymap
@@ -414,3 +422,7 @@ require('session_manager').setup {
 map('n', '<C-s>s', '<cmd>SessionManager save_current_session<cr>', opts)
 map('n', '<C-s>l', '<cmd>SessionManager load_session<cr>', opts)
 map('n', '<C-s>d', '<cmd>SessionManager delete_session<cr>', opts)
+
+
+-- require("lspfuzzy").setup {}
+
