@@ -26,20 +26,20 @@
 
 import logging
 import os
+import subprocess
 from typing import List  # noqa: F401
 
 from libqtile import bar, layout, widget
 from libqtile.config import Click, Drag, Group, Key, Match, Screen
 from libqtile.lazy import lazy
-from libqtile.utils import guess_terminal
 from libqtile.widget import base
 
 from libqtile.log_utils import logger
 
 logger.setLevel(logging.ERROR)
-# logger.warning("Your message here")
 
 stream_mode = False
+
 
 class TextBasedIntervalWidget(base.InLoopPollText):
     defaults = [
@@ -65,6 +65,45 @@ class PamixerVolume(TextBasedIntervalWidget):
     def poll(self):
         return f'{os.popen("pamixer --get-volume-human").read().strip()}'
 
+
+class WarpCli:
+    cli_command: str = "warp-cli"
+
+    def run(self, command: str) -> bytes:
+        proccess = subprocess.run([self.cli_command, command], capture_output=True)
+        return proccess.stdout
+
+    def is_connected(self) -> bool:
+        # stdout=b'Status update: Connected\nSuccess\n'
+        status = self.run("status").decode().lower()
+        return "disconnected" not in status
+
+    def connect(self) -> None:
+        self.run("connect")
+
+    def disconnect(self) -> None:
+        self.run("disconnect")
+
+    def switch(self) -> None:
+        if self.is_connected():
+            self.disconnect()
+        else:
+            self.connect()
+
+
+@lazy.function
+def lazy_vpn_switch(qtile) -> None:
+    warp_cli.switch()
+
+
+class VPNStatus(TextBasedIntervalWidget):
+    def poll(self):
+        if warp_cli.is_connected():
+            return "| VPN"
+        return ""
+
+
+warp_cli = WarpCli()
 
 mod = "mod4"
 # terminal = guess_terminal()
@@ -142,6 +181,12 @@ keys = [
     Key([mod], "a", lazy.spawn(tmim), desc="Launch vim"),
     # Switch keyboard layout
     Key([mod], "space", lazy.spawn("xkb-switch -n"), desc="Switch keyboard layout"),
+    Key(
+        [mod, "control"],
+        "v",
+        lazy_vpn_switch,
+        desc="Enable/disable VPN",
+    ),
     # Sound hotkeys
     # Key([], 'XF86AudioRaiseVolume', lazy.spawn('pulseaudio-ctl up 5')),
     # Key([], 'XF86AudioLowerVolume', lazy.spawn('pulseaudio-ctl down 5')),
@@ -239,6 +284,7 @@ if not stream_mode:
                     # widget.TextBox("Press &lt;M-r&gt; to spawn", foreground="#d75f5f"),
                     widget.Systray(),
                     # widget.Sep(linewidth=0, padding=6),
+                    VPNStatus(),
                     widget.TextBox(
                         text="|", fontsize=12, foreground=["#f8f8f2", "#f8f8f2"]
                     ),
@@ -285,6 +331,7 @@ else:
                     # widget.TextBox("default config", name="default"),
                     # widget.TextBox("Press &lt;M-r&gt; to spawn", foreground="#d75f5f"),
                     widget.Systray(),
+                    VPNStatus(),
                     # widget.Sep(linewidth=0, padding=6),
                     widget.TextBox(
                         text="|", fontsize=12, foreground=["#f8f8f2", "#f8f8f2"]
