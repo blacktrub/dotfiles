@@ -38,7 +38,7 @@ from libqtile.log_utils import logger
 
 logger.setLevel(logging.ERROR)
 
-stream_mode = False
+stream_mode = True
 
 
 class TextBasedIntervalWidget(base.InLoopPollText):
@@ -222,49 +222,31 @@ for i in groups:
         ]
     )
 
-layouts = [
-    # layout.Columns(border_focus_stack=['#d75f5f', '#8f3d3d'], border_width=2),
-    # layout.Stack(
-    #     num_stacks=2,
-    #     border_focus_stack=['#ffffff', '#ffffff'],
-    #     border_focus='#ffffff',
-    #     border_width=1,
-    #     grow_amount=2,
-    #     insert_position=1,
-    # ),
-    layout.Columns(
-        border_focus_stack=["#ffffff", "#ffffff"],
-        border_focus="#ffffff",
-        # border_width=1,
-        grow_amount=2,
-        margin=3,
-        insert_position=2,
-    ),
-    layout.Max(),
-    # Try more layouts by unleashing below layouts.
-    # layout.Stack(num_stacks=2),
-    # layout.Bsp(),
-    # layout.Matrix(),
-    # layout.MonadTall(),
-    # layout.MonadWide(),
-    # layout.RatioTile(),
-    # layout.Tile(),
-    # layout.TreeTab(),
-    # layout.VerticalTile(),
-    # layout.Zoomy(),
-]
 
-widget_defaults = dict(
-    font="Hack",
-    fontsize=14,
-    padding=3,
-)
-extension_defaults = widget_defaults.copy()
 
 if not stream_mode:
+    layouts = [
+        layout.Columns(
+            border_focus_stack=["#ffffff", "#ffffff"],
+            border_focus="#ffffff",
+            border_width=1,
+            grow_amount=2,
+            margin=6,
+            insert_position=3,
+        ),
+        layout.Max(),
+    ]
+    widget_defaults = dict(
+        font="Hack",
+        fontsize=14,
+        padding=3,
+    )
+    extension_defaults = widget_defaults.copy()
+
     screens = [
         Screen(
-            wallpaper="~/pic/pattern4k.jpg",
+            wallpaper="~/pic/space2-fullhd.jpg",
+            wallpaper_mode="fill",
             top=bar.Bar(
                 [
                     widget.CurrentLayout(),
@@ -308,11 +290,67 @@ if not stream_mode:
                 # border_color=["ff00ff", "000000", "ff00ff", "000000"]  # Borders are magenta
             ),
         ),
+        Screen(
+            wallpaper="~/pic/space2-fullhd.jpg",
+            wallpaper_mode="fill",
+            top=bar.Bar(
+                [
+                    widget.CurrentLayout(),
+                    widget.GroupBox(),
+                    widget.TextBox(
+                        text="|", fontsize=12, foreground=["#f8f8f2", "#f8f8f2"]
+                    ),
+                    widget.WindowName(),
+                    widget.Chord(
+                        chords_colors={
+                            "launch": ("#ff0000", "#ffffff"),
+                        },
+                        name_transform=lambda name: name.upper(),
+                    ),
+                    VPNStatus(),
+                    widget.TextBox(
+                        text="|", fontsize=12, foreground=["#f8f8f2", "#f8f8f2"]
+                    ),
+                    CurrentKeyboardLayout(),
+                    widget.TextBox(
+                        text="|", fontsize=12, foreground=["#f8f8f2", "#f8f8f2"]
+                    ),
+                    PamixerVolume(),
+                    widget.TextBox(
+                        text="|", fontsize=12, foreground=["#f8f8f2", "#f8f8f2"]
+                    ),
+                    widget.Clock(format="%Y-%m-%d %a %I:%M %p"),
+                    widget.TextBox(
+                        text="|", fontsize=12, foreground=["#f8f8f2", "#f8f8f2"]
+                    ),
+                ],
+                24,
+            ),
+        ),
     ]
 else:
+    layouts = [
+        layout.Columns(
+            # border_focus_stack=["#ffffff", "#ffffff"],
+            border_focus="#ffffff",
+            # border_width=1,
+            grow_amount=2,
+            margin=3,
+            insert_position=3,
+        ),
+        layout.Max(),
+    ]
+    widget_defaults = dict(
+        font="Hack",
+        fontsize=14,
+        padding=3,
+    )
+    extension_defaults = widget_defaults.copy()
+
     fake_screens = [
         Screen(
-            wallpaper="~/pic/mosaic.jpg",
+            wallpaper="~/pic/space3-fullhd.jpg",
+            wallpaper_mode="fill",
             top=bar.Bar(
                 [
                     widget.CurrentLayout(),
@@ -397,6 +435,26 @@ else:
             y=0,
             width=960,
             height=2160,
+        ),
+        # second screen
+        Screen(
+            bottom=bar.Bar(
+                [
+                    widget.Prompt(),
+                    widget.Sep(),
+                    widget.WindowName(),
+                    widget.Sep(),
+                    widget.Systray(),
+                    widget.Sep(),
+                    widget.Clock(format="%H:%M:%S %d.%m.%Y"),
+                ],
+                24,
+                background="#555555",
+            ),
+            x=960 + 1920 + 960,
+            y=0,
+            width=1080,
+            height=1920,
         ),
     ]
 

@@ -43,6 +43,8 @@ vim.call('plug#begin', '~/.config/nvim/plugged')
   -- session
   Plug 'Shatur/neovim-session-manager'
 
+  Plug 'blacktrub/neovim-typer'
+
 vim.call('plug#end')
 
 -- THEME OPTIONS
@@ -262,8 +264,15 @@ local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
 
 nvim_lsp.gopls.setup{
-  -- cmd = {"/Users/blacktrub/go/bin/gopls"},
   cmd = {"/home/bt/go/bin/gopls"},
+  on_attach = lsp_attach,
+  flags = {
+      debounce_text_changes = 150,
+  },
+  capabilities = capabilities,
+}
+
+nvim_lsp.sumneko_lua.setup{
   on_attach = lsp_attach,
   flags = {
       debounce_text_changes = 150,
@@ -423,6 +432,8 @@ map('n', '<C-s>s', '<cmd>SessionManager save_current_session<cr>', opts)
 map('n', '<C-s>l', '<cmd>SessionManager load_session<cr>', opts)
 map('n', '<C-s>d', '<cmd>SessionManager delete_session<cr>', opts)
 
+
+map('v', '<C-s>t', '<Esc>:NvimTyper<cr>', opts)
 
 -- require("lspfuzzy").setup {}
 
