@@ -29,16 +29,59 @@ import os
 import subprocess
 from typing import List  # noqa: F401
 
-from libqtile import bar, layout, widget
+from libqtile import bar, layout, widget, hook, qtile
 from libqtile.config import Click, Drag, Group, Key, Match, Screen
-from libqtile.lazy import lazy
+from libqtile.lazy import lazy, LazyCommandInterface
 from libqtile.widget import base
-
+from libqtile.core.manager import Qtile
 from libqtile.log_utils import logger
 
-logger.setLevel(logging.ERROR)
 
-stream_mode = True
+stream_mode = False
+qtile: Qtile
+lazy: LazyCommandInterface
+
+mod = "mod4"
+terminal = "alacritty"
+browser = "firefox"
+tmim = f"{terminal} -e tmux new -As vim"
+
+logger.setLevel(logging.INFO)
+
+
+@hook.subscribe.startup_once
+def startup_stream_mode():
+    if not stream_mode:
+        return
+
+    qtile.focus_screen(1)
+    qtile.groups_map["7"].cmd_toscreen(toggle=False)
+    qtile.focus_screen(2)
+    qtile.groups_map["8"].cmd_toscreen(toggle=False)
+    qtile.focus_screen(3)
+    qtile.groups_map["9"].cmd_toscreen(toggle=False)
+    qtile.focus_screen(0)
+    qtile.groups_map["1"].cmd_toscreen(toggle=False)
+
+
+def get_groups():
+    return [Group(i, label="·") for i in "123456789"]
+    if not stream_mode:
+        return [Group(i, label="·") for i in "123456789"]
+
+    # return [
+    #     Group("1", label="·", spawn=[tmim, "kitty", "screenkey"]),
+    #     Group("2", label="·", spawn=["kitty"]),
+    #     Group("3", label="·", spawn="xournalpp"),
+    #     Group("4", label="·"),
+    #     Group("5", label="·"),
+    #     Group("6", label="·"),
+    #     Group(
+    #         "7", label="·", spawn=f"{browser} --new-instance --new-window https://dashboard.twitch.tv/"
+    #     ),
+    #     Group("8", label="·", spawn=["obs"]),
+    #     Group("9", label="·"),
+    # ]
 
 
 class TextBasedIntervalWidget(base.InLoopPollText):
@@ -66,49 +109,44 @@ class PamixerVolume(TextBasedIntervalWidget):
         return f'{os.popen("pamixer --get-volume-human").read().strip()}'
 
 
-class WarpCli:
-    cli_command: str = "warp-cli"
+class NMCli:
+    device_name: str = "wg0"
 
-    def run(self, command: str) -> bytes:
-        proccess = subprocess.run([self.cli_command, command], capture_output=True)
-        return proccess.stdout
-
-    def is_connected(self) -> bool:
-        # stdout=b'Status update: Connected\nSuccess\n'
-        status = self.run("status").decode().lower()
-        return "disconnected" not in status
+    def execute(self, command: str) -> str | None:
+        out = subprocess.run(["nmcli", *command.split(" ")], capture_output=True)
+        return out.stdout.decode() if out.stdout else None
 
     def connect(self) -> None:
-        self.run("connect")
+        self.execute(
+            f"connection import type wireguard file /home/bt/.local/{self.device_name}.conf"
+        )
 
     def disconnect(self) -> None:
-        self.run("disconnect")
+        self.execute(f"connection delete {self.device_name}")
 
-    def switch(self) -> None:
-        if self.is_connected():
-            self.disconnect()
-        else:
-            self.connect()
+    def status(self) -> bool:
+        raw = self.execute("device status")
+        items = raw.split("\n")[1:]
+        for item in items:
+            if item.strip().startswith(self.device_name):
+                return "disconnected" not in item
+        return False
 
 
 @lazy.function
-def lazy_vpn_switch(qtile) -> None:
-    warp_cli.switch()
+def switch_vpn(qtile):
+    nmcli = NMCli()
+    if nmcli.status():
+        nmcli.disconnect()
+    else:
+        nmcli.connect()
 
 
-class VPNStatus(TextBasedIntervalWidget):
+class WireguardStatus(TextBasedIntervalWidget):
     def poll(self):
-        if warp_cli.is_connected():
-            return "| VPN"
-        return ""
+        nmcli = NMCli()
+        return f" {nmcli.device_name} up" if nmcli.status() else ""
 
-
-warp_cli = WarpCli()
-
-mod = "mod4"
-# terminal = guess_terminal()
-terminal = "alacritty"
-tmim = f"{terminal} -e tmux new -As vim"
 
 keys = [
     # A list of available commands that can be bound to keys can be found
@@ -155,13 +193,15 @@ keys = [
     Key(
         [mod, "shift"],
         "s",
-        lazy.spawn("scrot -e 'xclip -selection clipboard -t image/png -i $f' -z"),
+        lazy.spawn("scrot -e 'xclip -selection clipboard -t image/jpeg -i $f' -z"),
         desc="Take screenshot",
     ),
     Key(
         [mod, "shift", "control"],
         "s",
-        lazy.spawn("scrot -e 'xclip -selection clipboard -t image/png -i $f' -z -s"),
+        lazy.spawn(
+            "scrot '%Y-%m-%d_$wx$h.jpeg' -e 'xclip -selection clipboard -t image/jpeg -i $f' -z -s"
+        ),
         desc="Take screenshot",
     ),
     # Toggle between different layouts as defined below
@@ -181,12 +221,6 @@ keys = [
     Key([mod], "a", lazy.spawn(tmim), desc="Launch vim"),
     # Switch keyboard layout
     Key([mod], "space", lazy.spawn("xkb-switch -n"), desc="Switch keyboard layout"),
-    Key(
-        [mod, "control"],
-        "v",
-        lazy_vpn_switch,
-        desc="Enable/disable VPN",
-    ),
     # Sound hotkeys
     # Key([], 'XF86AudioRaiseVolume', lazy.spawn('pulseaudio-ctl up 5')),
     # Key([], 'XF86AudioLowerVolume', lazy.spawn('pulseaudio-ctl down 5')),
@@ -194,9 +228,15 @@ keys = [
     Key([], "XF86AudioRaiseVolume", lazy.spawn("pamixer -i 5")),
     Key([], "XF86AudioLowerVolume", lazy.spawn("pamixer -d 5")),
     Key([], "XF86AudioMute", lazy.spawn("pamixer -t")),
+    # VPN
+    Key(
+        [mod, "control"],
+        "v",
+        switch_vpn,
+    ),
 ]
 
-groups = [Group(i, label="·") for i in "123456789"]
+groups = get_groups()
 
 for i in groups:
     keys.extend(
@@ -221,7 +261,6 @@ for i in groups:
             #     desc="move focused window to group {}".format(i.name)),
         ]
     )
-
 
 
 if not stream_mode:
@@ -266,7 +305,7 @@ if not stream_mode:
                     # widget.TextBox("Press &lt;M-r&gt; to spawn", foreground="#d75f5f"),
                     widget.Systray(),
                     # widget.Sep(linewidth=0, padding=6),
-                    VPNStatus(),
+                    WireguardStatus(),
                     widget.TextBox(
                         text="|", fontsize=12, foreground=["#f8f8f2", "#f8f8f2"]
                     ),
@@ -291,7 +330,7 @@ if not stream_mode:
             ),
         ),
         Screen(
-            wallpaper="~/pic/space2-fullhd.jpg",
+            wallpaper="~/pic/keyboard.png",
             wallpaper_mode="fill",
             top=bar.Bar(
                 [
@@ -307,7 +346,6 @@ if not stream_mode:
                         },
                         name_transform=lambda name: name.upper(),
                     ),
-                    VPNStatus(),
                     widget.TextBox(
                         text="|", fontsize=12, foreground=["#f8f8f2", "#f8f8f2"]
                     ),
@@ -369,7 +407,6 @@ else:
                     # widget.TextBox("default config", name="default"),
                     # widget.TextBox("Press &lt;M-r&gt; to spawn", foreground="#d75f5f"),
                     widget.Systray(),
-                    VPNStatus(),
                     # widget.Sep(linewidth=0, padding=6),
                     widget.TextBox(
                         text="|", fontsize=12, foreground=["#f8f8f2", "#f8f8f2"]
@@ -438,6 +475,7 @@ else:
         ),
         # second screen
         Screen(
+            wallpaper="~/pic/keyboard.png",
             bottom=bar.Bar(
                 [
                     widget.Prompt(),
@@ -488,6 +526,8 @@ floating_layout = layout.Floating(
         Match(title="branchdialog"),  # gitk
         Match(title="pinentry"),  # GPG key password entry
         Match(title="feh"),  # GPG key password entry
+        Match(title="OpenTabletDriver"),
+        Match(title="otd-gui"),
     ]
 )
 auto_fullscreen = True
