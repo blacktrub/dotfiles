@@ -44,6 +44,7 @@ vim.call('plug#begin', '~/.config/nvim/plugged')
   Plug 'Shatur/neovim-session-manager'
 
   Plug 'blacktrub/neovim-typer'
+  Plug 'kevinhwang91/nvim-bqf'
 
 vim.call('plug#end')
 
@@ -72,6 +73,7 @@ vim.opt.expandtab = true  -- tabs are space
 vim.opt.autoindent = true
 vim.opt.copyindent = true -- copy indent from the previous line
 vim.opt.wrap = false -- copy indent from the previous line
+vim.opt.relativenumber = true 
 -- }}} Spaces & Tabs
 
 -- Clipboard {{{
@@ -113,6 +115,12 @@ map('n', '<leader>fg', '<cmd>Telescope live_grep<cr>', opts)
 map('n', '<leader>fb', '<cmd>Telescope buffers<cr>', opts)
 map('n', '<leader>fh', '<cmd>Telescope help_tags<cr>', opts)
 
+-- window motions remap
+-- map('n', '<C-h>', '<C-w>h', opts)
+-- map('n', '<C-j>', '<C-w>j', opts)
+-- map('n', '<C-k>', '<C-w>k', opts)
+-- map('n', '<C-l>', '<C-w>l', opts)
+
 -- formatter
 map('n', '<C-f>', ':Neoformat<cr>', opts)
 -- terminal
@@ -140,7 +148,7 @@ require'nvim-tree'.setup {
   open_on_tab         = true,
   hijack_cursor       = false,
   update_cwd          = false,
-  update_to_buf_dir   = {
+  hijack_directories   = {
     enable = true,
     auto_open = true,
   },
@@ -168,10 +176,9 @@ require'nvim-tree'.setup {
   },
   view = {
     width = 30,
-    height = 30,
+    -- height = 30,
     hide_root_folder = false,
     side = 'left',
-    auto_resize = false,
     mappings = {
       custom_only = false,
       list = {}
@@ -436,4 +443,10 @@ map('n', '<C-s>d', '<cmd>SessionManager delete_session<cr>', opts)
 map('v', '<C-s>t', '<Esc>:NvimTyper<cr>', opts)
 
 -- require("lspfuzzy").setup {}
+--
+require("bqf").setup()
+
+map('n', '<leader>co', ':copen<cr>', opts)
+map('n', '<leader>cc', ':ccl<cr>', opts)
+map('n', '<leader>cn', ':cnext<cr>', opts)
 
