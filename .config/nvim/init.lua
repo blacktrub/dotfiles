@@ -46,6 +46,13 @@ vim.call('plug#begin', '~/.config/nvim/plugged')
   Plug 'blacktrub/neovim-typer'
   Plug 'kevinhwang91/nvim-bqf'
 
+  Plug 'fatih/vim-go'
+
+  -- Debugger
+  Plug 'mfussenegger/nvim-dap'
+  Plug 'rcarriga/nvim-dap-ui'
+  Plug 'mfussenegger/nvim-dap-python'
+
 vim.call('plug#end')
 
 -- THEME OPTIONS
@@ -201,6 +208,7 @@ require("toggleterm").setup{
   }
 }
 
+
 require('telescope').setup{
     defaults = {
         file_previewer   = require('telescope.previewers').vim_buffer_cat.new,
@@ -212,7 +220,7 @@ require('telescope').setup{
             require("telescope.themes").get_dropdown {
                 -- even more opts
             }
-        }
+        },
     },
 }
 require("telescope").load_extension("ui-select")
@@ -450,3 +458,27 @@ map('n', '<leader>co', ':copen<cr>', opts)
 map('n', '<leader>cc', ':ccl<cr>', opts)
 map('n', '<leader>cn', ':cnext<cr>', opts)
 
+require("dapui").setup()
+require('dap-python').setup()
+local dap = require('dap')
+dap.configurations.python = {
+  {
+    type = 'python',
+    request = 'launch',
+    name = 'Django',
+    program = vim.fn.getcwd() .. '/manage.py',
+    args = {'runserver', '8000', '--noreload'},
+    justMyCode = false,
+  }
+}
+
+
+map('n', '<leader>zb', ':lua require("dap").toggle_breakpoint()<cr>', opts)
+map('n', '<leader>zc', ':lua require("dap").continue()<cr>', opts)
+map('n', '<leader>zn', ':lua require("dap").step_over()<cr>', opts)
+map('n', '<leader>zi', ':lua require("dap").step_in()<cr>', opts)
+map('n', '<leader>zo', ':lua require("dap").step_out()<cr>', opts)
+map('n', '<leader>zr', ':lua require("dap").run_last()<cr>', opts)
+map('n', '<leader>zt', ':lua require("dapui").toggle()<cr>', opts)
+
+-- require('vim-go').setup()
