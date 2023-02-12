@@ -41,7 +41,7 @@ vim.call('plug#begin', '~/.config/nvim/plugged')
 
 
   -- session
-  Plug 'Shatur/neovim-session-manager'
+  -- Plug 'Shatur/neovim-session-manager'
 
   Plug 'blacktrub/neovim-typer'
   Plug 'kevinhwang91/nvim-bqf'
@@ -52,6 +52,11 @@ vim.call('plug#begin', '~/.config/nvim/plugged')
   Plug 'mfussenegger/nvim-dap'
   Plug 'rcarriga/nvim-dap-ui'
   Plug 'mfussenegger/nvim-dap-python'
+
+  Plug 'chrisbra/csv.vim'
+
+  Plug 'vlime/vlime'
+  Plug 'bhurlow/vim-parinfer'
 
 vim.call('plug#end')
 
@@ -65,7 +70,18 @@ vim.call('plug#end')
 -- })
 
 vim.cmd [[colorscheme moonfly]]
-require('lualine').setup({options = {theme = 'moonfly'}})
+require('lualine').setup({
+  options = {theme = 'moonfly'},
+  sections = {
+    lualine_a = {
+      {
+        'filename',
+        file_status = true, -- displays file status (readonly status, modified status)
+        path = 1 -- 0 = just filename, 1 = relative path, 2 = absolute path
+      }
+    }
+  }
+})
 require('nvim-web-devicons').get_icons()
 
 vim.opt.termguicolors = true
@@ -102,6 +118,8 @@ vim.opt.laststatus = 2             -- window will always have a status line
 -- vim.opt.swapfile = false
 vim.o.swapfile=false
 -- }}} UI Config
+
+vim.opt.scrolloff=999
 
 local map = vim.api.nvim_set_keymap
 local opts = { noremap = true, silent = true }
@@ -276,7 +294,7 @@ local lsp_attach = function(client, bufnr)
 end
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
+capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 
 nvim_lsp.gopls.setup{
   cmd = {"/home/bt/go/bin/gopls"},
@@ -440,12 +458,12 @@ require('nvim_comment').setup()
 
 
 require("todo-comments").setup {}
-require('session_manager').setup {
-  autoload_mode = require('session_manager.config').AutoloadMode.Disabled, -- Define what to do when Neovim is started without arguments. Possible values: Disabled, CurrentDir, LastSession
-}
-map('n', '<C-s>s', '<cmd>SessionManager save_current_session<cr>', opts)
-map('n', '<C-s>l', '<cmd>SessionManager load_session<cr>', opts)
-map('n', '<C-s>d', '<cmd>SessionManager delete_session<cr>', opts)
+-- require('session_manager').setup {
+--   autoload_mode = require('session_manager.config').AutoloadMode.Disabled, -- Define what to do when Neovim is started without arguments. Possible values: Disabled, CurrentDir, LastSession
+-- }
+-- map('n', '<C-s>s', '<cmd>SessionManager save_current_session<cr>', opts)
+-- map('n', '<C-s>l', '<cmd>SessionManager load_session<cr>', opts)
+-- map('n', '<C-s>d', '<cmd>SessionManager delete_session<cr>', opts)
 
 
 map('v', '<C-s>t', '<Esc>:NvimTyper<cr>', opts)
@@ -455,7 +473,7 @@ map('v', '<C-s>t', '<Esc>:NvimTyper<cr>', opts)
 require("bqf").setup()
 
 map('n', '<leader>co', ':copen<cr>', opts)
-map('n', '<leader>cc', ':ccl<cr>', opts)
+-- map('n', '<leader>cc', ':ccl<cr>', opts)
 map('n', '<leader>cn', ':cnext<cr>', opts)
 
 require("dapui").setup()
@@ -469,6 +487,14 @@ dap.configurations.python = {
     program = vim.fn.getcwd() .. '/manage.py',
     args = {'runserver', '8000', '--noreload'},
     justMyCode = false,
+  },
+  {
+    type = 'python',
+    request = 'launch',
+    name = 'Django tests',
+    program = vim.fn.getcwd() .. '/manage.py',
+    args = {'test', 'apps.channels.tests', '--keepdb'},
+    justMyCode = false,
   }
 }
 
@@ -480,5 +506,15 @@ map('n', '<leader>zi', ':lua require("dap").step_in()<cr>', opts)
 map('n', '<leader>zo', ':lua require("dap").step_out()<cr>', opts)
 map('n', '<leader>zr', ':lua require("dap").run_last()<cr>', opts)
 map('n', '<leader>zt', ':lua require("dapui").toggle()<cr>', opts)
+
+-- movements
+map('n', '<C-d>', '<C-d>zz', opts)
+map('n', '<C-u>', '<C-u>zz', opts)
+
+map('n', '<leader-c>', '\\cc', opts)
+
+map('n', '<Space><Space>', ':wa<cr>', opts)
+
+map('v', ';rv', 'c<C-O>:set revins<CR><C-R>"<Esc>:set norevins<CR>', opts)
 
 -- require('vim-go').setup()
