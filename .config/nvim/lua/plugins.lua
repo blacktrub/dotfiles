@@ -14,7 +14,6 @@ vim.call('plug#begin', '~/.config/nvim/plugged')
   Plug 'neovim/nvim-lspconfig'
   Plug 'williamboman/nvim-lsp-installer'
 
-  Plug 'neovim/nvim-lspconfig' -- Collection of configurations for built-in LSP client
   Plug 'hrsh7th/nvim-cmp' -- Autocompletion plugin
   Plug 'hrsh7th/cmp-nvim-lsp' -- LSP source for nvim-cmp
   Plug 'saadparwaiz1/cmp_luasnip' -- Snippets source for nvim-cmp
@@ -62,4 +61,6 @@ vim.call('plug#begin', '~/.config/nvim/plugged')
 
   Plug 'folke/neodev.nvim'
 
+  Plug 'williamboman/mason.nvim'
+  Plug 'williamboman/mason-lspconfig.nvim'
 vim.call('plug#end')

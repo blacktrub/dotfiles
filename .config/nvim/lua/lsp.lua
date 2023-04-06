@@ -1,13 +1,8 @@
--- LSP config
--- local lsp_installer = require("nvim-lsp-installer")
-
--- Register a handler that will be called for all installed servers.
--- Alternatively, you may also register handlers on specific server instances instead (see example below).
---lsp_installer.on_server_ready(function(server)
---    local opts = {}
---    print(server)
---    server:setup(opts)
---end)
+local servers = {"gopls", "pyright", "yamlls", "html", "dockerls", "tsserver", "lua_ls"}
+require("mason").setup()
+require("mason-lspconfig").setup({
+  ensure_installed = servers,
+})
 
 require("neodev").setup()
 
@@ -46,62 +41,15 @@ end
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 
-nvim_lsp.gopls.setup{
-  cmd = {"/home/bt/go/bin/gopls"},
-  on_attach = lsp_attach,
-  flags = {
-      debounce_text_changes = 150,
-  },
-  capabilities = capabilities,
-}
-
-nvim_lsp.pyright.setup{
-  on_attach = lsp_attach,
-  flags = {
-      debounce_text_changes = 150,
-  },
-  capabilities = capabilities,
-}
-
-nvim_lsp.yamlls.setup{
-  on_attach = lsp_attach,
-  flags = {
-      debounce_text_changes = 150,
-  },
-  capabilities = capabilities,
-}
-
-nvim_lsp.html.setup{
-  on_attach = lsp_attach,
-  flags = {
-      debounce_text_changes = 150,
-  },
-  capabilities = capabilities,
-}
-
-nvim_lsp.dockerls.setup{
-  on_attach = lsp_attach,
-  flags = {
-      debounce_text_changes = 150,
-  },
-  capabilities = capabilities,
-}
-
-nvim_lsp.clangd.setup{
-  on_attach = lsp_attach,
-  flags = {
-      debounce_text_changes = 150,
-  },
-  capabilities = capabilities,
-}
-
-nvim_lsp.tsserver.setup{
-  on_attach = lsp_attach,
-  flags = {
-      debounce_text_changes = 150,
-  },
-  capabilities = capabilities,
-}
+for i = 1, #servers do
+  nvim_lsp[servers[i]].setup{
+    on_attach = lsp_attach,
+    flags = {
+        debounce_text_changes = 150,
+    },
+    capabilities = capabilities,
+  }
+end
 
 nvim_lsp.lua_ls.setup({
   settings = {
