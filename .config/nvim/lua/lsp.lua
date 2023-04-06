@@ -42,6 +42,11 @@ local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 
 for i = 1, #servers do
+  -- we init it below because of some custom attributes
+  if servers[i] == "lua_ls" then
+    goto continue
+  end
+
   nvim_lsp[servers[i]].setup{
     on_attach = lsp_attach,
     flags = {
@@ -49,6 +54,7 @@ for i = 1, #servers do
     },
     capabilities = capabilities,
   }
+    ::continue::
 end
 
 nvim_lsp.lua_ls.setup({
