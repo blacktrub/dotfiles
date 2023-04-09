@@ -1,6 +1,6 @@
 local null_ls = require("null-ls")
 
-local need_to_install = { "goimports", "prettier", "stylua" }
+local need_to_install = { "goimports", "prettier", "stylua", "black" }
 
 require("mason-null-ls").setup({
 	ensure_installed = need_to_install,
