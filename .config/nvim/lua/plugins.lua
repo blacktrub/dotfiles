@@ -20,7 +20,6 @@ vim.call('plug#begin', '~/.config/nvim/plugged')
   Plug 'L3MON4D3/LuaSnip' -- Snippets plugin
   Plug 'averms/black-nvim'
   Plug 'chr4/nginx.vim'
-  Plug 'sbdchd/neoformat' -- Format code
   Plug "terrortylor/nvim-comment"
 
   -- fuzzy finder for lsp, it seems pretty but I don't know how to use it properly
@@ -45,7 +44,7 @@ vim.call('plug#begin', '~/.config/nvim/plugged')
   Plug 'blacktrub/neovim-typer'
   Plug 'kevinhwang91/nvim-bqf'
 
-  Plug 'fatih/vim-go'
+  -- Plug 'fatih/vim-go'
 
   -- Debugger
   Plug 'mfussenegger/nvim-dap'
@@ -63,4 +62,6 @@ vim.call('plug#begin', '~/.config/nvim/plugged')
 
   Plug 'williamboman/mason.nvim'
   Plug 'williamboman/mason-lspconfig.nvim'
+  Plug 'jose-elias-alvarez/null-ls.nvim'
+  Plug 'jay-babu/mason-null-ls.nvim'
 vim.call('plug#end')

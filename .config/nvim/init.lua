@@ -5,4 +5,5 @@ require("colorscheme")
 require("options")
 require("debug")
 require("setups")
+require("formatters")
 
