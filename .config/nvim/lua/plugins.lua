@@ -46,11 +46,6 @@ vim.call('plug#begin', '~/.config/nvim/plugged')
 
   -- Plug 'fatih/vim-go'
 
-  -- Debugger
-  Plug 'mfussenegger/nvim-dap'
-  Plug 'rcarriga/nvim-dap-ui'
-  Plug 'mfussenegger/nvim-dap-python'
-
   Plug 'chrisbra/csv.vim'
 
   Plug 'vlime/vlime'
@@ -64,4 +59,10 @@ vim.call('plug#begin', '~/.config/nvim/plugged')
   Plug 'williamboman/mason-lspconfig.nvim'
   Plug 'jose-elias-alvarez/null-ls.nvim'
   Plug 'jay-babu/mason-null-ls.nvim'
+  Plug 'jay-babu/mason-nvim-dap.nvim'
+
+  -- Debugger
+  Plug 'mfussenegger/nvim-dap'
+  Plug 'rcarriga/nvim-dap-ui'
+  Plug 'mfussenegger/nvim-dap-python'
 vim.call('plug#end')

@@ -4,7 +4,9 @@ require("mason-lspconfig").setup({
   ensure_installed = servers,
 })
 
-require("neodev").setup()
+require("neodev").setup({
+	library = { plugins = { "nvim-dap-ui" }, types = true },
+})
 
 local nvim_lsp = require('lspconfig')
 local lsp_attach = function(client, bufnr)
