@@ -5,7 +5,6 @@ vim.call('plug#begin', '~/.config/nvim/plugged')
   Plug 'kyazdani42/nvim-web-devicons' -- for file icons
   Plug 'kyazdani42/nvim-tree.lua'
   Plug 'goolord/alpha-nvim'
-  Plug 'romgrk/barbar.nvim'
   Plug 'akinsho/toggleterm.nvim'
   Plug 'nvim-lua/plenary.nvim'
   Plug 'nvim-telescope/telescope.nvim'
@@ -65,4 +64,6 @@ vim.call('plug#begin', '~/.config/nvim/plugged')
   Plug 'mfussenegger/nvim-dap'
   Plug 'rcarriga/nvim-dap-ui'
   Plug 'mfussenegger/nvim-dap-python'
+
+  Plug 'ThePrimeagen/harpoon'
 vim.call('plug#end')

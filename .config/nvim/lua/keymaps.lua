@@ -50,3 +50,12 @@ map('n', '<leader>tt', '<cmd>TroubleToggle<CR>', opts)
 -- map('n', '<C-l>', '<C-w>l', opts)
 
 -- map('n', '<leader-c>', '\\cc', opts)
+--
+
+-- harpoon
+map('n', '<leader>a', '<cmd>lua require("harpoon.mark").add_file()<CR>', opts)
+map('n', '<leader>l', '<cmd>lua require("harpoon.ui").toggle_quick_menu()<CR>', opts)
+
+for i = 1, 5 do
+    map('n', '<leader>'..i, '<cmd>:lua require("harpoon.ui").nav_file('..i..')<CR>', opts)
+end

@@ -148,19 +148,6 @@ require("todo-comments").setup({})
 require("bqf").setup()
 require("trouble").setup()
 
-require("barbar").setup({
-	animation = true,
-	auto_hide = true,
-	maximum_padding = 0,
-	icons = {
-		filetype = { enabled = true },
-		button = false,
-	},
-	sidebar_filetypes = {
-		NvimTree = true,
-	},
-})
-
 -- require("lspfuzzy").setup()
 -- require('vim-go').setup()
 -- require("lspfuzzy").setup {}
