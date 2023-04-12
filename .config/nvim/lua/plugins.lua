@@ -1,69 +1,61 @@
-local Plug = vim.fn['plug#']
-vim.call('plug#begin', '~/.config/nvim/plugged')
-  --Plug 'vim-airline/vim-airline'
-  Plug 'nvim-lualine/lualine.nvim'
-  Plug 'kyazdani42/nvim-web-devicons' -- for file icons
-  Plug 'kyazdani42/nvim-tree.lua'
-  Plug 'goolord/alpha-nvim'
-  Plug 'akinsho/toggleterm.nvim'
-  Plug 'nvim-lua/plenary.nvim'
-  Plug 'nvim-telescope/telescope.nvim'
-  Plug 'nvim-telescope/telescope-ui-select.nvim'
-  Plug 'nvim-treesitter/nvim-treesitter'
-  Plug 'neovim/nvim-lspconfig'
-  Plug 'williamboman/nvim-lsp-installer'
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+	vim.fn.system({
+		"git",
+		"clone",
+		"--filter=blob:none",
+		"https://github.com/folke/lazy.nvim.git",
+		"--branch=stable", -- latest stable release
+		lazypath,
+	})
+end
+vim.opt.rtp:prepend(lazypath)
 
-  Plug 'hrsh7th/nvim-cmp' -- Autocompletion plugin
-  Plug 'hrsh7th/cmp-nvim-lsp' -- LSP source for nvim-cmp
-  Plug 'saadparwaiz1/cmp_luasnip' -- Snippets source for nvim-cmp
-  Plug 'L3MON4D3/LuaSnip' -- Snippets plugin
-  Plug 'averms/black-nvim'
-  Plug 'chr4/nginx.vim'
-  Plug "terrortylor/nvim-comment"
+-- TODO: do I need it?
+-- vim.g.mapleader = " " -- Make sure to set `mapleader` before lazy so your mappings are correct
 
-  -- fuzzy finder for lsp, it seems pretty but I don't know how to use it properly
-  Plug 'ojroques/nvim-lspfuzzy'
-  Plug 'junegunn/fzf'
-  Plug 'junegunn/fzf.vim'
-
-  -- themes
-  Plug 'marko-cerovac/material.nvim'
-  Plug 'bluz71/vim-nightfly-guicolors'
-  Plug 'projekt0n/github-nvim-theme'
-  Plug 'bluz71/vim-moonfly-colors'
-
-  -- todo highlight
-  Plug 'nvim-lua/plenary.nvim'
-  Plug 'folke/todo-comments.nvim'
-
-
-  -- session
-  -- Plug 'Shatur/neovim-session-manager'
-
-  Plug 'blacktrub/neovim-typer'
-  Plug 'kevinhwang91/nvim-bqf'
-
-  -- Plug 'fatih/vim-go'
-
-  Plug 'chrisbra/csv.vim'
-
-  Plug 'vlime/vlime'
-  Plug 'bhurlow/vim-parinfer'
-
-  Plug 'folke/trouble.nvim'
-
-  Plug 'folke/neodev.nvim'
-
-  Plug 'williamboman/mason.nvim'
-  Plug 'williamboman/mason-lspconfig.nvim'
-  Plug 'jose-elias-alvarez/null-ls.nvim'
-  Plug 'jay-babu/mason-null-ls.nvim'
-  Plug 'jay-babu/mason-nvim-dap.nvim'
-
-  -- Debugger
-  Plug 'mfussenegger/nvim-dap'
-  Plug 'rcarriga/nvim-dap-ui'
-  Plug 'mfussenegger/nvim-dap-python'
-
-  Plug 'ThePrimeagen/harpoon'
-vim.call('plug#end')
+require("lazy").setup({
+	"nvim-lualine/lualine.nvim",
+	"kyazdani42/nvim-web-devicons",
+	"kyazdani42/nvim-tree.lua",
+	"goolord/alpha-nvim",
+	"akinsho/toggleterm.nvim",
+	"nvim-lua/plenary.nvim",
+	"nvim-telescope/telescope.nvim",
+	"nvim-telescope/telescope-ui-select.nvim",
+	{ "nvim-treesitter/nvim-treesitter", build = ":TSUpdate" },
+	"neovim/nvim-lspconfig",
+	"williamboman/nvim-lsp-installer",
+	"hrsh7th/nvim-cmp",
+	"hrsh7th/cmp-nvim-lsp",
+	"saadparwaiz1/cmp_luasnip",
+	"L3MON4D3/LuaSnip",
+	"averms/black-nvim",
+	"chr4/nginx.vim",
+	"terrortylor/nvim-comment",
+	"ojroques/nvim-lspfuzzy",
+	"junegunn/fzf",
+	"junegunn/fzf.vim",
+	"marko-cerovac/material.nvim",
+	"bluz71/vim-nightfly-guicolors",
+	"projekt0n/github-nvim-theme",
+	"bluz71/vim-moonfly-colors",
+	"nvim-lua/plenary.nvim",
+	"folke/todo-comments.nvim",
+	"blacktrub/neovim-typer",
+	"kevinhwang91/nvim-bqf",
+	"chrisbra/csv.vim",
+	"vlime/vlime",
+	"bhurlow/vim-parinfer",
+	"folke/trouble.nvim",
+	"folke/neodev.nvim",
+	"williamboman/mason.nvim",
+	"williamboman/mason-lspconfig.nvim",
+	"jose-elias-alvarez/null-ls.nvim",
+	"jay-babu/mason-null-ls.nvim",
+	"jay-babu/mason-nvim-dap.nvim",
+	"mfussenegger/nvim-dap",
+	"rcarriga/nvim-dap-ui",
+	"mfussenegger/nvim-dap-python",
+	"ThePrimeagen/harpoon",
+})

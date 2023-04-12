@@ -17,8 +17,6 @@ require("alpha").setup(require("alpha.themes.startify").opts)
 require("nvim-tree").setup({
 	disable_netrw = true,
 	hijack_netrw = true,
-	open_on_setup = false,
-	ignore_ft_on_setup = {},
 	-- auto_close          = true,
 	open_on_tab = true,
 	hijack_cursor = false,
@@ -92,10 +90,27 @@ require("telescope").setup({
 })
 require("telescope").load_extension("ui-select")
 
+local treesitter_languages = {
+	"lua",
+	"vim",
+	"go",
+	"gomod",
+	"gosum",
+	"python",
+	"yaml",
+}
 require("nvim-treesitter.configs").setup({
+	ensure_installed = treesitter_languages,
 	highlight = {
 		enable = true,
 		additional_vim_regex_highlighting = false,
+		disable = function(lang, buf)
+			local max_filesize = 100 * 1024 -- 100 KB
+			local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
+			if ok and stats and stats.size > max_filesize then
+				return true
+			end
+		end,
 	},
 })
 
