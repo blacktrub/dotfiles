@@ -13,8 +13,11 @@ map('n', '<leader>n', ':NvimTreeFindFile<CR>', opts)
 
 map('n', '<leader>ff', '<cmd>Telescope find_files<cr>', opts)
 map('n', '<leader>fg', '<cmd>Telescope live_grep<cr>', opts)
+map('n', '<leader>fs', '<cmd>Telescope grep_string<cr>', opts)
 map('n', '<leader>fb', '<cmd>Telescope buffers<cr>', opts)
 map('n', '<leader>fh', '<cmd>Telescope help_tags<cr>', opts)
+map('n', '<leader>fm', '<cmd>Telescope marks<cr>', opts)
+map('n', '<leader>fr', '<cmd>Telescope git_status<cr>', opts)
 
 -- terminal: enter visual mode
 map('t', '<esc>', '<C-\\><C-n>', opts)
@@ -51,6 +54,9 @@ map('n', '<leader>tt', '<cmd>TroubleToggle<CR>', opts)
 
 -- map('n', '<leader-c>', '\\cc', opts)
 --
+
+
+map('n', 'gb', '<cmd>BlamerToggle<CR>', opts)
 
 -- harpoon
 map('n', '<leader>a', '<cmd>lua require("harpoon.mark").add_file()<CR>', opts)

@@ -32,4 +32,35 @@ dap.configurations.python = {
 	},
 }
 
+
+require("dap-go").setup({
+	dap_configurations = {
+		{
+			-- Must be "go" or it will be ignored by the plugin
+			type = "go",
+			name = "Attach remote",
+			mode = "remote",
+			request = "attach",
+		},
+		{
+			type = "go",
+			request = "launch",
+			name = "Run PP Debug",
+			program = vim.fn.getcwd() .. "/cmd/service/main.go",
+		},
+		{
+			type = "go",
+			name = "Debug test Integration",
+			request = "launch",
+			mode = "test",
+			program = "${file}",
+			args = { "-test.tags", "integration" },
+		},
+	},
+	delve = {
+		initialize_timeout_sec = 20,
+		port = "${port}",
+	},
+})
+
 require("dapui").setup()
