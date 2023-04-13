@@ -23,11 +23,32 @@ local lsp_attach = function(client, bufnr)
 	-- Mappings.
 	local opts = { noremap = true, silent = true }
 
+	local function on_list(options)
+		local new_options = { title = options.title, context = options.context }
+		local items = {}
+		for key, value in pairs(options.items) do
+			if not string.find(value.filename, "mocks") then
+				items[key] = value
+			end
+		end
+		new_options.items = items
+
+		vim.fn.setqflist({}, " ", new_options)
+		if #new_options.items > 1 then
+			vim.api.nvim_command("copen")
+		else
+			vim.api.nvim_command("cfirst")
+		end
+	end
+
+	vim.keymap.set("n", "gi", function()
+		vim.lsp.buf.implementation({ on_list = on_list })
+	end, { noremap = true, silent = true, buffer = bufnr })
+
 	-- See `:help vim.lsp.*` for documentation on any of the below functions
 	buf_set_keymap("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", opts)
 	buf_set_keymap("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", opts)
 	buf_set_keymap("n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", opts)
-	buf_set_keymap("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)
 	buf_set_keymap("n", "<C-k>", "<cmd>lua vim.lsp.buf.signature_help()<CR>", opts)
 	buf_set_keymap("n", "<space>wa", "<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>", opts)
 	buf_set_keymap("n", "<space>wr", "<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>", opts)
